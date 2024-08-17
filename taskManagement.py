@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify, request,abort
+from datetime import datetime
 
 app=Flask(__name__)
 
@@ -41,6 +42,26 @@ def task_delete(id):
             return("Task has been removed")
         else:
             return 'Task does not exist'
+
+#POST to add the task
+@app.route('/tasks', methods=['POST'])
+def create_task():
+    data = request.json
+
+    # Input validation
+    if not data.get('title') or not data.get('description'):
+        abort(400, description="Title and description are required , please provide input")
+
+    task = {
+        'id': data['id'],
+        'title': data['title'],
+        'description': data['description'],
+        'status': data.get('status', 'pending'),
+        'created_at': datetime.now().isoformat(),
+        'updated_at': datetime.now().isoformat()
+    }
+
+    return jsonify(task), 201
 
   
 if __name__=='__main__':
