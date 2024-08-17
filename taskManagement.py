@@ -3,6 +3,7 @@ from datetime import datetime
 
 app=Flask(__name__)
 
+
 tasks = [ {"id": 1, "title": "AdminService.exe", "description": "Windows Setup API", "status": "Running", "created_at":"17-08-2024", "updated_at":"17-08-2024"},
              {"id": 2, "title": "conhost.exe", "description": "Console Windows Host", "status": "Running", "created_at":"17-08-2024", "updated_at":"17-08-2024"}, 
              {"id": 3, "title": "LockApp.exe", "description": "LockApp.exe", "status": "Suspended", "created_at":"17-08-2024", "updated_at":"17-08-2024"},
@@ -19,13 +20,28 @@ def get_task(id):
     task = next(task for task in tasks if task['id'] == id)
     return jsonify(task)
 
-# PUT /tasks/<id>: Update an existing task
-@app.route("/tasks/<id>", methods=["PUT"])
+# PUT /tasks/<id>: Updates an existing task
+@app.route('/tasks/<int:id>', methods=['PUT'])
 def task_update(id):
-    tasks = tasks.query.get(id)
-    title = request.json['title']
-    description = request.json['description']
-    return("Task has been updated")
+    for task in tasks:
+        if(task['id'] == (id)):
+            title = request.json['title']
+            description = request.json['description']
+            task['title'] = title
+            task['description'] = description
+            return("Task has been updated")
+        else:
+            return 'Task does not exist'
+
+#Endpoint for deleting a record
+@app.route('/tasks/<int:id>', methods=['DELETE'])
+def task_delete(id):
+    for task in tasks:
+        if(task['id'] == (id)):
+            tasks.remove(task)
+            return("Task has been removed")
+        else:
+            return 'Task does not exist'
 
 #POST to add the task
 @app.route('/tasks', methods=['POST'])
