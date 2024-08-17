@@ -18,7 +18,7 @@ def get_task(id):
     task = next(task for task in tasks if task['id'] == id)
     return jsonify(task)
 
-# PUT /tasks/<id>: Update an existing task
+# PUT /tasks/<id>: Updates an existing task
 @app.route("/tasks/<id>", methods=["PUT"])
 def task_update(id):
     tasks = tasks.query.get(id)
