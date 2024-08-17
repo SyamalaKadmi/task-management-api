@@ -18,6 +18,15 @@ def get_task(id):
     task = next(task for task in tasks if task['id'] == id)
     return jsonify(task)
 
+# PUT /tasks/<id>: Update an existing task
+@app.route("/tasks/<id>", methods=["PUT"])
+def task_update(id):
+    tasks = tasks.query.get(id)
+    title = request.json['title']
+    description = request.json['description']
+    return("Task has been updated")
+
+  
 if __name__=='__main__':
 
     app.run(debug=True)
